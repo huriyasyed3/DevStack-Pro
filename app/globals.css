@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* shadcn ke styles agar alag file mein hain to yahan import karo, lekin comment out rakho abhi */
+/* @import "shadcn/tailwind.css"; */
+
+h1 {
+  @apply text-4xl md:text-5xl font-bold tracking-tight;
+}
+
+h2 {
+  @apply text-3xl font-semibold;
+}
+
+h3 {
+  @apply text-xl font-semibold;
+}
+
+p {
+  @apply text-mutedForeground leading-relaxed;
+}
