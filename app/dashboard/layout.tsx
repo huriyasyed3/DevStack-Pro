@@ -1,23 +1,25 @@
-"use client";
-
-import Sidebar from "../../components/dashboard/Sidebar";
+// app/dashboard/layout.tsx
+import Sidebar from "@/components/dashboard/Sidebar";
+import Footer from "@/components/footer/page";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-screen w-full bg-[#050a15] text-slate-200 overflow-hidden">
-      
-      {/* SIDEBAR: Desktop par fixed width, Mobile par handle hoga */}
-      <div className="hidden lg:block h-full shrink-0">
+    <div className="flex h-screen w-full bg-[#050a15] overflow-hidden">
+      {/* Desktop Sidebar */}
+      <div className="hidden lg:block shrink-0 h-full">
         <Sidebar />
       </div>
 
-      {/* MAIN CONTENT AREA */}
-      <main className="flex-1 min-w-0 h-full overflow-y-auto overflow-x-hidden relative">
-        {/* Is div ki wajah se content screen se bahar nahi jayega */}
-        <div className="w-full max-w-[1400px] mx-auto p-4 md:p-8 lg:p-10">
-          <div className="space-y-6 md:space-y-10">
+      {/* Main Content Area */}
+      <main className="flex-1 flex flex-col min-w-0 h-full relative">
+        {/* Is div ko scrollable banayein */}
+        <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar">
+          <div className="p-4 md:p-8 lg:p-10 w-full max-w-[1400px] mx-auto">
             {children}
           </div>
+          
+          {/* Footer ko scrollable div ke andar end par rakhein */}
+          <Footer />
         </div>
       </main>
     </div>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FileText, Image as ImageIcon, FileCode, Zap } from "lucide-react";
+import { FileText, Image as ImageIcon, FileCode } from "lucide-react";
 
 const tools = [
   {
@@ -20,21 +20,22 @@ const tools = [
     slug: "word-to-pdf",
     icon: <FileCode className="text-orange-500" size={32} />,
   },
-  // Aap yahan mazeed tools add kar sakte hain
 ];
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-[#020817] py-20 px-6">
+    /* FIXED: bg-background aur text-foreground use kiya taake light mode mein black text ho jaye */
+    <main className="min-h-screen bg-background text-foreground py-20 px-6 transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
         
         {/* Hero Section */}
         <div className="text-center mb-16 space-y-4">
-         
-          <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight">
+          {/* FIXED: text-foreground use kiya white ki jagah */}
+          <h1 className="text-4xl md:text-6xl font-black text-foreground tracking-tight">
             Streamline Your Workflow with <span className="text-blue-500">Pro-Grade Tools</span>
           </h1>
-          <p className="text-slate-400 text-lg max-w-2xl mx-auto">
+          {/* FIXED: text-muted-foreground for secondary text */}
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto font-medium">
             Professional grade tools to convert, compress and manage your files. 
             No installation required, 100% secure.
           </p>
@@ -46,13 +47,15 @@ export default function HomePage() {
             <Link 
               key={tool.slug} 
               href={`/tools/${tool.slug}`}
-              className="group p-8 bg-[#0b1224]/50 border border-slate-800 rounded-3xl hover:border-blue-500/50 hover:bg-blue-600/5 transition-all duration-300"
+              /* FIXED: bg-card aur border-border use kiya taake theme switch ho sake */
+              className="group p-8 bg-card border border-border rounded-3xl hover:border-blue-500/50 hover:bg-blue-600/5 transition-all duration-300 shadow-sm"
             >
-              <div className="mb-6 bg-slate-900 w-14 h-14 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+              {/* FIXED: bg-muted icon container ke liye */}
+              <div className="mb-6 bg-muted w-14 h-14 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
                 {tool.icon}
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">{tool.title}</h3>
-              <p className="text-slate-400 text-sm leading-relaxed mb-4">
+              <h3 className="text-xl font-bold text-foreground mb-2">{tool.title}</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed mb-4">
                 {tool.desc}
               </p>
               <span className="text-blue-500 text-sm font-bold group-hover:underline">

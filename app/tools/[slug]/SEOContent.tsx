@@ -2,16 +2,13 @@
 
 import Link from "next/link";
 
-/**
- * SEOContent Component (Dynamic & Scalable + White Text Fix)
- */
 interface SEOContentProps {
   toolName: string; // e.g. "Pdf To Word"
   slug: string;     // e.g. "pdf-to-word"
 }
 
 export default function SEOContent({ toolName, slug }: SEOContentProps) {
-  // Derived values for natural language
+  // Logic for dynamic formatting
   const lowerTool = toolName.toLowerCase();
   const fromFormat = lowerTool.includes("to")
     ? lowerTool.split(" to ")[0].trim()
@@ -29,95 +26,93 @@ export default function SEOContent({ toolName, slug }: SEOContentProps) {
     : toFormat.toUpperCase();
 
   return (
-    <section className="mt-16 max-w-4xl mx-auto leading-relaxed text-white">
-      {/* Remove prose completely aur manual styling karte hain taake full control rahe */}
+    /* FIXED: text-white -> text-foreground | max-w-4xl for better readability */
+    <section className="mt-16 max-w-4xl mx-auto leading-relaxed text-foreground transition-colors px-2">
       
-      <h2 className="text-3xl md:text-4xl font-bold mb-8 text-white">
+      {/* 1. MAIN H1/H2 Title */}
+      <h2 className="text-3xl md:text-4xl font-black mb-8 text-foreground tracking-tight">
         {toolName} Converter – Free Online File Conversion Tool
       </h2>
 
-      <p className="text-lg mb-8 text-gray-200">
-        Welcome to DevStack Pro's powerful <strong className="text-white">{toolName}</strong> converter. 
+      {/* 2. Intro Paragraph */}
+      <p className="text-lg mb-8 text-muted-foreground">
+        Welcome to DevStack Pro&apos;s powerful <strong className="text-foreground">{toolName}</strong> converter. 
         This free online tool lets you convert {fromExt} files to {toExt} in just seconds — 
-        no software installation, no registration, no watermarks. Whether you're a student, 
+        no software installation, no registration, no watermarks. Whether you&apos;re a student, 
         professional, or business user, our AI-enhanced platform delivers accurate, 
         high-quality conversions every time.
       </p>
 
-      <h3 className="text-2xl font-semibold mt-12 mb-6 text-white">
-        Why Choose DevStack Pro {toolName} Converter?
-      </h3>
-      <p className="text-gray-200 mb-6">
-        Unlike generic online converters that compromise on quality or security, 
-        DevStack Pro stands out with:
-      </p>
-      <ul className="list-disc pl-6 space-y-4 mb-10 text-gray-200">
-        <li><strong className="text-white">Lightning-fast processing</strong> — most conversions finish in under 10 seconds</li>
-        <li><strong className="text-white">End-to-end encryption</strong> — your files are processed securely and deleted immediately after download</li>
-        <li><strong className="text-white">Preserves formatting & layout</strong> — tables, images, fonts, and headings stay intact</li>
-        <li><strong className="text-white">Mobile-friendly drag & drop</strong> — works perfectly on phone, tablet, or desktop</li>
-        <li><strong className="text-white">No file size limits on free plan</strong> (upgrade for even larger files & batch processing)</li>
-        <li><strong className="text-white">Part of a complete AI Tools & PDF Suite</strong> — combine with compression, merging, editing & more</li>
-      </ul>
+      {/* 3. Features Section */}
+      <div className="bg-card border border-border rounded-3xl p-8 mb-12 shadow-sm">
+        <h3 className="text-2xl font-bold mb-6 text-foreground">
+          Why Choose DevStack Pro {toolName} Converter?
+        </h3>
+        <p className="text-muted-foreground mb-6">
+          Unlike generic online converters that compromise on quality or security, 
+          DevStack Pro stands out with:
+        </p>
+        <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-muted-foreground">
+          <li className="flex gap-2">
+            <span className="text-primary font-bold">✓</span> 
+            <span><strong className="text-foreground">Lightning-fast processing</strong> — conversions finish in under 10s</span>
+          </li>
+          <li className="flex gap-2">
+            <span className="text-primary font-bold">✓</span> 
+            <span><strong className="text-foreground">End-to-end encryption</strong> — files deleted after processing</span>
+          </li>
+          <li className="flex gap-2">
+            <span className="text-primary font-bold">✓</span> 
+            <span><strong className="text-foreground">Format Preservation</strong> — layout and fonts stay intact</span>
+          </li>
+          <li className="flex gap-2">
+            <span className="text-primary font-bold">✓</span> 
+            <span><strong className="text-foreground">Mobile Friendly</strong> — works on any device</span>
+          </li>
+        </ul>
+      </div>
 
-      <h3 className="text-2xl font-semibold mt-12 mb-6 text-white">
+      {/* 4. Steps Section */}
+      <h3 className="text-2xl font-bold mt-12 mb-6 text-foreground">
         How to Convert {fromExt} to {toExt} in 4 Easy Steps
       </h3>
-      <ol className="list-decimal pl-6 space-y-4 mb-10 text-gray-200">
-        <li><strong className="text-white">Upload your file</strong> — drag & drop your {fromExt} document into the box above or click to browse.</li>
-        <li><strong className="text-white">Start conversion</strong> — click the big "{toolName}" button. Our system will instantly begin processing.</li>
-        <li><strong className="text-white">Wait a moment</strong> — you'll see a progress indicator while we handle the conversion.</li>
-        <li><strong className="text-white">Download your file</strong> — once done, click the download button to save your new {toExt} file.</li>
-      </ol>
+      <div className="space-y-6 mb-12">
+        {[
+          { step: "1", title: "Upload your file", desc: `Drag & drop your ${fromExt} document into the box above.` },
+          { step: "2", title: "Start conversion", desc: `Click the big "${toolName}" button to begin.` },
+          { step: "3", title: "Wait a moment", desc: "Our AI-driven engine handles the processing instantly." },
+          { step: "4", title: "Download", desc: `Click download to save your new ${toExt} file.` },
+        ].map((item) => (
+          <div key={item.step} className="flex gap-4 items-start">
+            <div className="bg-primary text-primary-foreground w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold">
+              {item.step}
+            </div>
+            <div>
+              <p className="font-bold text-foreground">{item.title}</p>
+              <p className="text-muted-foreground text-sm">{item.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
 
-      <h3 className="text-2xl font-semibold mt-12 mb-6 text-white">
-        Common Use Cases for {toolName}
-      </h3>
-      <p className="text-gray-200 mb-6">
-        People use our {lowerTool} tool every day for:
-      </p>
-      <ul className="list-disc pl-6 space-y-3 mb-10 text-gray-200">
-        <li>Turning scanned PDFs into editable Word documents</li>
-        <li>Preparing reports and resumes for professional sharing</li>
-        <li>Converting invoices, contracts, and forms for editing</li>
-        <li>Making documents compatible across different software</li>
-        <li>Reducing file size while keeping quality (with our integrated compressor)</li>
-      </ul>
+      {/* 5. Utility Links */}
+      <div className="border-t border-border pt-10">
+        <h3 className="text-xl font-bold mb-4 text-foreground">Need More Tools?</h3>
+        <div className="flex flex-wrap gap-3">
+          {["pdf-to-word", "word-to-pdf", "pdf-compressor", "merge-pdf"].map((linkSlug) => (
+            <Link 
+              key={linkSlug}
+              href={`/tools/${linkSlug}`} 
+              className="px-4 py-2 bg-muted hover:bg-primary hover:text-primary-foreground rounded-full text-sm transition-all border border-border"
+            >
+              {linkSlug.replace(/-/g, ' ').toUpperCase()}
+            </Link>
+          ))}
+        </div>
+      </div>
 
-      <h3 className="text-2xl font-semibold mt-12 mb-6 text-white">
-        Is {toolName} Really Free & Secure?
-      </h3>
-      <p className="text-gray-200 mb-6">
-        Yes — 100% free for basic use. We never store your files longer than necessary, and all transfers use HTTPS + encryption.
-        For extra peace of mind, read our{" "}
-        <Link href="/privacy" className="text-blue-400 hover:text-blue-300 underline">
-          Privacy Policy
-        </Link>.
-      </p>
-
-      <h3 className="text-2xl font-semibold mt-12 mb-6 text-white">
-        Need More Tools? Explore the Suite
-      </h3>
-      <p className="text-gray-200 mb-6">
-        DevStack Pro offers a full collection of file utilities:
-      </p>
-      <ul className="list-disc pl-6 space-y-3 mb-8 text-gray-200">
-        <li><Link href="/tools/pdf-to-word" className="text-blue-400 hover:text-blue-300 underline">PDF to Word</Link></li>
-        <li><Link href="/tools/word-to-pdf" className="text-blue-400 hover:text-blue-300 underline">Word to PDF</Link></li>
-        <li><Link href="/tools/pdf-compressor" className="text-blue-400 hover:text-blue-300 underline">PDF Compressor</Link></li>
-        <li><Link href="/tools/merge-pdf" className="text-blue-400 hover:text-blue-300 underline">Merge PDF</Link></li>
-        <li><Link href="/tools/pdf-to-jpg" className="text-blue-400 hover:text-blue-300 underline">PDF to JPG</Link></li>
-      </ul>
-
-      <p className="text-gray-200 mb-6">
-        For advanced features like batch conversion, OCR support, password protection, and unlimited usage, check out our{" "}
-        <Link href="/pricing" className="text-blue-400 hover:text-blue-300 font-medium underline">
-          Pro plans
-        </Link>.
-      </p>
-
-      <p className="text-gray-500 italic mt-16 text-sm">
-        Last updated: February 2026 • DevStack Pro – Your All-in-One AI Tools & PDF Solution
+      <p className="text-muted-foreground/50 italic mt-16 text-xs text-center">
+        Last updated: 2026 • DevStack Pro – Your All-in-One AI Tools Solution
       </p>
     </section>
   );

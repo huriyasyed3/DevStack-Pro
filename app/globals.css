@@ -2,21 +2,55 @@
 @tailwind components;
 @tailwind utilities;
 
-/* shadcn ke styles agar alag file mein hain to yahan import karo, lekin comment out rakho abhi */
-/* @import "shadcn/tailwind.css"; */
+@layer base {
+  :root {
+    /* Light Mode Variables */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --border: 214.3 31.8% 91.4%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+  }
 
-h1 {
-  @apply text-4xl md:text-5xl font-bold tracking-tight;
+  .dark {
+    /* Dark Mode Variables (Jo aapka DevStack Pro theme hai) */
+    --background: 222 47% 5%;    /* #050a15 */
+    --foreground: 210 40% 98%;
+    --card: 222 47% 9%;      /* #0b1224 */
+    --card-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%; /* #1e293b */
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+  }
 }
 
-h2 {
-  @apply text-3xl font-semibold;
-}
-
-h3 {
-  @apply text-xl font-semibold;
-}
-
-p {
-  @apply text-mutedForeground leading-relaxed;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  h1 {
+    @apply text-4xl md:text-5xl font-bold tracking-tight mb-4;
+  }
+  h2 {
+    @apply text-3xl font-semibold mb-3;
+  }
+  h3 {
+    @apply text-xl font-semibold mb-2;
+  }
+  p {
+    @apply text-muted-foreground leading-relaxed;
+  }
 }
