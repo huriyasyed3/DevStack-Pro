@@ -1,40 +1,5 @@
-// import { create } from "zustand";
-
-// /**
-//  * File Type
-//  */
-// export interface ConvertedFile {
-//   id: string;
-//   name: string;
-//   tool: string;
-//   date: string;
-// }
-
-// /**
-//  * Zustand Store
-//  * Handles:
-//  * - File history
-//  * - Conversion count (analytics)
-//  */
-// interface FilesState {
-//   files: ConvertedFile[];
-//   conversions: number;
-
-//   addFile: (file: ConvertedFile) => void;
-// }
-
-// export const useFilesStore = create<FilesState>((set) => ({
-//   files: [],
-//   conversions: 0,
-
-//   addFile: (file) =>
-//     set((state) => ({
-//       files: [file, ...state.files],
-//       conversions: state.conversions + 1,
-//     })),
-// }));
-
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 /** * ConvertedFile Interface
  */
@@ -48,17 +13,38 @@ export interface ConvertedFile {
 }
 
 interface FilesState {
-  files: ConvertedFile[]; // State ka naam 'files' hai
+  files: ConvertedFile[];
   conversions: number;
-  addFile: (file: ConvertedFile) => void; // 'file' ki type define kar di
+  addFile: (file: ConvertedFile) => void;
+  removeFile: (id: string) => void; // Single file delete karne ke liye
+  clearHistory: () => void;      // Poori history saaf karne ke liye
 }
 
-export const useFilesStore = create<FilesState>((set) => ({
-  files: [],
-  conversions: 0,
-  addFile: (file: ConvertedFile) => // Type added here
-    set((state) => ({
-      files: [file, ...state.files],
-      conversions: state.conversions + 1,
-    })),
-}));
+export const useFilesStore = create<FilesState>()(
+  persist(
+    (set) => ({
+      files: [],
+      conversions: 0,
+
+      // Nayi file add karna (Top par show hogi)
+      addFile: (file: ConvertedFile) =>
+        set((state) => ({
+          files: [file, ...state.files],
+          conversions: state.conversions + 1,
+        })),
+
+      // Specific file remove karna
+      removeFile: (id: string) =>
+        set((state) => ({
+          files: state.files.filter((f) => f.id !== id),
+        })),
+
+      // Poora data clear karna
+      clearHistory: () => set({ files: [] }),
+    }),
+    {
+      name: "devstack-history-storage", // LocalStorage mein is naam se save hoga
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+);
