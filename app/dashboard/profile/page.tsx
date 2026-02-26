@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { Camera, Mail, User, BookOpen, Moon, Bell, Save } from "lucide-react";
+import { Camera, Moon, Bell, Save } from "lucide-react";
 import { Switch } from "@/components/ui/switch"; // ShadCN component
 import { Button } from "@/components/ui/button";
 

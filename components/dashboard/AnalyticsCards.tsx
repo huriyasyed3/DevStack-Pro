@@ -1,97 +1,108 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { FileText, Zap, Clock, CreditCard } from "lucide-react"; 
+import React from "react";
+import { FileText, Zap, Clock, CreditCard } from "lucide-react";
 
 /**
- * AnalyticsCards Component
- * -----------------------
- * Displays the 4 top stats cards matching the dashboard image.
+ * 1. Interface for Type Safety
  */
-
-export default function AnalyticsCards() {
-  const [data, setData] = useState({
-    conversions: "1,284",
-    tokens: "45.2k",
-    time: "14.2h",
-    spend: "$29.00"
-  });
-
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      
-      {/* 1. Processed PDFs Card */}
-      <StatCard 
-        title="PROCESSED PDFS" 
-        value={data.conversions} 
-        trend="+13.5%" 
-        icon={<FileText className="text-blue-500" size={20} />} 
-      />
-
-      {/* 2. AI Tokens Card */}
-      <StatCard 
-        title="AI TOKENS USED" 
-        value={data.tokens} 
-        trend="+4.2%" 
-        icon={<Zap className="text-orange-500" size={20} />} 
-      />
-
-      {/* 3. Avg Time Saved Card */}
-      <StatCard 
-        title="AVG. TIME SAVED" 
-        value={data.time} 
-        trend="-2.1%" 
-        icon={<Clock className="text-purple-500" size={20} />} 
-      />
-
-      {/* 4. Monthly Spend Card */}
-      <StatCard 
-        title="MONTHLY SPEND" 
-        value={data.spend} 
-        trend="Stable" 
-        icon={<CreditCard className="text-emerald-500" size={20} />} 
-      />
-
-    </div>
-  );
+interface StatCardProps {
+  title: string;
+  value: string;
+  trend: string;
+  icon: React.ReactNode;
+  colorClass: string;
 }
 
 /**
- * Individual Stat Card Component
- * Matches the layout: Icon & Trend on top, Title & Value at bottom.
+ * 2. Individual Card Component (Internal)
  */
-function StatCard({ title, value, trend, icon }: any) {
+const StatCard = ({ title, value, trend, icon, colorClass }: StatCardProps) => {
   const isPositive = trend.includes('+');
-  const isNeutral = trend === "Stable";
 
   return (
-    <div className="bg-[#0b1224] border border-slate-800 p-6 rounded-[1.5rem] hover:border-slate-700 transition-all group">
-      
-      {/* Top Row: Icon and Trend Badge */}
-      <div className="flex justify-between items-start mb-6">
-        <div className="p-3 bg-[#11192e] rounded-xl border border-slate-800/50 group-hover:scale-110 transition-transform">
+    <div className="bg-[#0b1224] border border-slate-800 p-5 md:p-6 rounded-2xl transition-all duration-300 hover:border-slate-700 shadow-sm flex flex-col justify-between min-h-[140px]">
+      <div className="flex justify-between items-start w-full">
+        {/* Minimalist Icon Wrapper */}
+        <div className={`p-2.5 rounded-xl border border-slate-800 bg-slate-900/50 ${colorClass}`}>
           {icon}
         </div>
         
-        {/* Trend Percentage Badge */}
-        <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${
-          isNeutral ? 'bg-slate-800 text-slate-400' : 
-          isPositive ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'
+        {/* Trend Indicator */}
+        <span className={`text-[10px] font-bold px-2 py-1 rounded-md bg-slate-900/50 border border-slate-800 ${
+          isPositive ? 'text-emerald-500' : 'text-slate-500'
         }`}>
           {trend}
         </span>
       </div>
 
-      {/* Bottom Content: Title and Large Number */}
-      <div className="space-y-1">
-        <h3 className="text-[10px] font-black text-slate-500 tracking-[0.15em] uppercase">
+      <div className="mt-4 space-y-1">
+        {/* Label: Industry Standard Spacing */}
+        <p className="text-[10px] md:text-[11px] font-bold text-slate-500 uppercase tracking-widest">
           {title}
-        </h3>
-        <p className="text-3xl font-bold text-white tracking-tight">
-          {value}
         </p>
+        
+        {/* Primary Metric */}
+        <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight leading-none">
+          {value}
+        </h2>
       </div>
-      
+    </div>
+  );
+};
+
+/**
+ * 3. Main Export Component
+ */
+export default function AnalyticsCards() {
+  const stats = [
+    {
+      title: "Processed PDFs",
+      value: "1,284",
+      trend: "+13.5%",
+      icon: <FileText size={20} />,
+      colorClass: "text-blue-500"
+    },
+    {
+      title: "Tokens Used",
+      value: "45.2k",
+      trend: "+4.2%",
+      icon: <Zap size={20} />,
+      colorClass: "text-amber-500"
+    },
+    {
+      title: "Time Saved",
+      value: "14.2h",
+      trend: "+2.1%",
+      icon: <Clock size={20} />,
+      colorClass: "text-purple-500"
+    },
+    {
+      title: "Monthly Spend",
+      value: "$29.00",
+      trend: "0.0%",
+      icon: <CreditCard size={20} />,
+      colorClass: "text-emerald-500"
+    }
+  ];
+
+  return (
+    /* RESPONSIVE GRID SYSTEM:
+       - grid-cols-1: Single column on Mobile (Small screens)
+       - sm:grid-cols-2: Two columns on Tablets
+       - xl:grid-cols-4: Four columns on Desktop/Large screens
+    */
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 w-full">
+      {stats.map((stat, index) => (
+        <StatCard 
+          key={index}
+          title={stat.title}
+          value={stat.value}
+          trend={stat.trend}
+          icon={stat.icon}
+          colorClass={stat.colorClass}
+        />
+      ))}
     </div>
   );
 }

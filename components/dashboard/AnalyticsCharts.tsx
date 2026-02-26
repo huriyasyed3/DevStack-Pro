@@ -1,121 +1,9 @@
-// "use client";
-
-// import { useState } from "react";
-// import {
-//   LineChart,
-//   Line,
-//   XAxis,
-//   YAxis,
-//   Tooltip,
-//   ResponsiveContainer,
-//   CartesianGrid,
-// } from "recharts";
-
-// import { Card, CardContent } from "@/components/ui/card";
-// import { Button } from "@/components/ui/button";
-
-// /**
-//  * Weekly & Monthly mock data
-//  */
-
-// const weeklyData = [
-//   { label: "Mon", conversions: 12 },
-//   { label: "Tue", conversions: 19 },
-//   { label: "Wed", conversions: 8 },
-//   { label: "Thu", conversions: 24 },
-//   { label: "Fri", conversions: 32 },
-//   { label: "Sat", conversions: 18 },
-//   { label: "Sun", conversions: 27 },
-// ];
-
-// const monthlyData = [
-//   { label: "Jan", conversions: 120 },
-//   { label: "Feb", conversions: 190 },
-//   { label: "Mar", conversions: 160 },
-//   { label: "Apr", conversions: 220 },
-//   { label: "May", conversions: 260 },
-//   { label: "Jun", conversions: 310 },
-// ];
-
-// /**
-//  * AnalyticsChart with Toggle
-//  */
-// export default function AnalyticsChart() {
-//   const [view, setView] = useState<"weekly" | "monthly">("weekly");
-
-//   const data = view === "weekly" ? weeklyData : monthlyData;
-
-//   return (
-//     <Card>
-//       <CardContent className="p-6 space-y-6">
-
-//         {/* Header + Toggle */}
-//         <div className="flex items-center justify-between">
-//           <h2 className="text-lg font-semibold">
-//             {view === "weekly"
-//               ? "Weekly Conversions"
-//               : "Monthly Conversions"}
-//           </h2>
-
-//           <div className="flex gap-2">
-//             <Button
-//               size="sm"
-//               variant={view === "weekly" ? "primary" : "outline"}
-//               onClick={() => setView("weekly")}
-//             >
-//               Weekly
-//             </Button>
-
-//             <Button
-//               size="sm"
-//               variant={view === "monthly" ? "primary" : "outline"}
-//               onClick={() => setView("monthly")}
-//             >
-//               Monthly
-//             </Button>
-//           </div>
-//         </div>
-
-//         {/* Chart */}
-//         <div className="w-full h-[320px]">
-//           <ResponsiveContainer width="100%" height="100%">
-//             <LineChart data={data}>
-//               <defs>
-//                 <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-//                   <stop offset="5%" stopColor="#2563eb" stopOpacity={0.8} />
-//                   <stop offset="95%" stopColor="#2563eb" stopOpacity={0.1} />
-//                 </linearGradient>
-//               </defs>
-
-//               <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
-
-//               <XAxis dataKey="label" />
-//               <YAxis />
-//               <Tooltip />
-
-//               <Line
-//                 type="monotone"
-//                 dataKey="conversions"
-//                 stroke="#2563eb"
-//                 strokeWidth={3}
-//                 dot={false}
-//                 fill="url(#chartGradient)"
-//               />
-//             </LineChart>
-//           </ResponsiveContainer>
-//         </div>
-
-//       </CardContent>
-//     </Card>
-//   );
-// }
-
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { Card, CardContent } from "@/components/ui/card";
-import { ChevronDown } from "lucide-react"; // Dropdown icon ke liye
+import { ChevronDown } from "lucide-react"; 
 import { Button } from "../ui/button";
 
 const weeklyData = [
@@ -129,73 +17,85 @@ const weeklyData = [
 ];
 
 export default function AnalyticsChart() {
+  const [mounted, setMounted] = useState(false);
+
+  // Prevents hydration mismatch for Recharts
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   return (
-    <Card className="bg-[#0b1224] border-slate-800 rounded-2xl overflow-hidden">
-      <CardContent className="p-6">
+    <Card className="bg-[#0b1224] border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+      <CardContent className="p-4 sm:p-6">
         
-        {/* Header Section: Image ke mutabiq */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
+        {/* Header Section: Responsive Flex */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
+          <div className="space-y-1">
             <h2 className="text-lg font-bold text-white tracking-tight">Usage Tracking</h2>
-            <p className="text-xs text-slate-500">Token consumption over the last 7 days</p>
+            <p className="text-[10px] sm:text-xs text-slate-500">Token consumption over the last 7 days</p>
           </div>
 
-          {/* Right Side Dropdown Selector */}
-          <div className="relative group">
-            <Button variant="outline" className="bg-[#161f35] border-slate-800 text-slate-300 text-[11px]">
-            Last 7 Days <ChevronDown size={14} />
-           </Button>
-            {/* Dropdown Menu (Hidden by default) */}
-            <div className="absolute right-0 mt-2 w-32 bg-[#161f35] border border-slate-800 rounded-lg shadow-xl hidden group-hover:block z-10">
+          <div className="relative group self-start">
+            <Button variant="outline" className="h-8 bg-[#161f35] border-slate-800 text-slate-300 text-[10px] sm:text-[11px] px-3">
+              Last 7 Days <ChevronDown className="ml-2" size={14} />
+            </Button>
+            {/* Professional Dropdown Menu */}
+            <div className="absolute right-0 mt-2 w-32 bg-[#161f35] border border-slate-800 rounded-lg shadow-2xl hidden group-hover:block z-20">
               <ul className="py-1 text-[11px] font-medium text-slate-400">
-                <li className="px-4 py-2 hover:bg-blue-600 hover:text-white cursor-pointer">Last 24 Hours</li>
-                <li className="px-4 py-2 hover:bg-blue-600 hover:text-white cursor-pointer">Last 30 Days</li>
+                <li className="px-4 py-2 hover:bg-blue-600 hover:text-white cursor-pointer transition-colors">Last 24 Hours</li>
+                <li className="px-4 py-2 hover:bg-blue-600 hover:text-white cursor-pointer transition-colors">Last 30 Days</li>
               </ul>
             </div>
           </div>
         </div>
 
-        {/* Chart Area */}
-        <div className="w-full h-[320px] mt-4">
+        {/* Chart Area: Responsive Height */}
+        <div className="w-full h-[250px] sm:h-[320px] mt-4">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={weeklyData}>
-              {/* Vertical lines hide kar di hain jaisa image mein hai */}
-              <CartesianGrid stroke="#1e293b" vertical={false} strokeDasharray="0" />
+            <LineChart data={weeklyData} margin={{ left: -20, right: 10 }}>
+              <CartesianGrid stroke="#1e293b" vertical={false} strokeDasharray="3 3" />
               <XAxis 
                 dataKey="label" 
                 axisLine={false} 
                 tickLine={false} 
-                tick={{fill: '#475569', fontSize: 10, fontWeight: '800'}}
-                dy={15}
+                tick={{fill: '#475569', fontSize: 9, fontWeight: '700'}}
+                dy={10}
               />
               <YAxis hide domain={[0, 100]} />
               <Tooltip 
-                cursor={{ stroke: '#1e293b', strokeWidth: 2 }}
+                cursor={{ stroke: '#3b82f6', strokeWidth: 1 }}
                 contentStyle={{ 
                   backgroundColor: '#0f172a', 
                   border: '1px solid #1e293b', 
-                  borderRadius: '12px',
-                  fontSize: '12px'
+                  borderRadius: '10px',
+                  fontSize: '11px',
+                  color: '#fff'
                 }}
+                itemStyle={{ color: '#3b82f6' }}
               />
-              {/* Line thickness aur color image se match karta hua */}
               <Line 
                 type="monotone" 
                 dataKey="conversions" 
                 stroke="#3b82f6" 
                 strokeWidth={3} 
                 dot={false}
-                activeDot={{ r: 6, strokeWidth: 0, fill: '#3b82f6' }}
+                activeDot={{ r: 5, strokeWidth: 0, fill: '#3b82f6' }}
+                animationDuration={1500}
               />
             </LineChart>
           </ResponsiveContainer>
         </div>
 
-        {/* X-Axis Highlight Line (Image mein blue indicators hain) */}
-        <div className="flex justify-between px-6 mt-2">
+        {/* Indicators: Hidden on very small screens, responsive on larger */}
+        <div className="hidden sm:flex justify-between items-center px-2 mt-6 gap-2">
             {weeklyData.map((_, i) => (
-                <div key={i} className="h-1 w-8 bg-blue-600/20 rounded-full">
-                    <div className="h-full w-1/2 bg-blue-500 rounded-full" />
+                <div key={i} className="h-1 flex-1 bg-blue-600/10 rounded-full overflow-hidden max-w-[40px] md:max-w-[60px]">
+                    <div 
+                      className="h-full bg-blue-500 rounded-full" 
+                      style={{ width: `${Math.random() * 60 + 20}%` }} 
+                    />
                 </div>
             ))}
         </div>
