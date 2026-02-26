@@ -14,7 +14,7 @@ export default function ProfilePage() {
         <div className="relative group">
           <div className="h-24 w-24 rounded-full overflow-hidden border-2 border-blue-600/30">
             <img 
-              src="/avatar.jpg" // Aapka profile image path
+              src="/avatar.jpg" 
               alt="Alex Rivera"
               className="h-full w-full object-cover"
             />
