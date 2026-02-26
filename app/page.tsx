@@ -32,7 +32,7 @@ export default function HomePage() {
         <div className="text-center mb-16 space-y-4">
          
           <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight">
-            Ultimate <span className="text-blue-500">Document</span> Hub
+            Streamline Your Workflow with <span className="text-blue-500">Pro-Grade Tools</span>
           </h1>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto">
             Professional grade tools to convert, compress and manage your files. 
