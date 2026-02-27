@@ -1,7 +1,6 @@
 import * as pdfjsLib from 'pdfjs-dist';
 
-// IMPORTANT: Next.js mein worker ko local import ke zariye set karna
-// Isse "Failed to fetch" wala CDN error khatam ho jayega
+// Worker path ko check karke set karna
 if (typeof window !== 'undefined' && !pdfjsLib.GlobalWorkerOptions.workerSrc) {
   pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
 }
@@ -10,38 +9,45 @@ export const extractTextFromPDF = async (file: File): Promise<string> => {
   try {
     const arrayBuffer = await file.arrayBuffer();
     
-    // PDF load karne ka task
+    // Uint8Array mein convert karna zaroori hai Turbopack ke liye
     const loadingTask = pdfjsLib.getDocument({ 
-      data: arrayBuffer,
-      useWorkerFetch: true, // Worker issues fix karne ke liye
-      isEvalSupported: false 
+      data: new Uint8Array(arrayBuffer),
+      useWorkerFetch: true 
     });
     
     const pdf = await loadingTask.promise;
-    let fullText = "";
+    let structuredContent = "";
 
-    // Text extraction loop
     for (let i = 1; i <= pdf.numPages; i++) {
       const page = await pdf.getPage(i);
       const textContent = await page.getTextContent();
       
-      // Items ko string mein convert karna
-      const pageText = textContent.items
-        .map((item: any) => item.str)
-        .join(" ");
-      
-      fullText += pageText + "\n\n";
+      let lastY = -1;
+      let lineText = "";
+
+      for (const item of textContent.items as any[]) {
+        // Y-coordinate (transform[5]) logic to detect new lines
+        if (lastY !== -1 && Math.abs(item.transform[5] - lastY) > 5) {
+          structuredContent += lineText + "\n";
+          lineText = "";
+        }
+        
+        // X-coordinate indentation logic
+        const xCoord = item.transform[4];
+        if (lineText === "" && xCoord > 80) {
+          lineText += "\t".repeat(Math.floor(xCoord / 60)); 
+        }
+
+        lineText += item.str;
+        lastY = item.transform[5];
+      }
+      structuredContent += lineText + "\n\n";
     }
 
-    // Agar text khali ho (Scanned PDF case)
-    if (!fullText.trim()) {
-      return "This PDF seems to be scanned or contains only images. No selectable text found.";
-    }
-
-    return fullText;
-  } catch (error) {
-    console.error("PDF.js Extraction Error:", error);
-    // Asli error console mein dikhega, user ko friendly message
-    throw new Error("Could not extract real text from PDF.");
+    return structuredContent || "No content found.";
+  } catch (error: any) {
+    // Console mein asli wajah check karne ke liye
+    console.error("PDF Processing Detailed Error:", error);
+    throw new Error(`Extraction failed: ${error.message || "Invalid PDF structure"}`);
   }
 };

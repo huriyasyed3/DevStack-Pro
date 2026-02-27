@@ -51,28 +51,41 @@ export default function ConvertActions({ file, toolName, onClear }: Props) {
        * CASE 1: PDF TO WORD (DOCX)
        * Uses 'docx' library to build a real XML-based Word structure.
        */
-      if (slug.includes("pdf-to-word")) {
-        const resultText = await extractTextFromPDF(file);
-        
-        const doc = new Document({
-          sections: [{
-            children: [
-              new Paragraph({
-                children: [
-                  new TextRun({ text: "CONVERTED DOCUMENT", bold: true, size: 32, color: "2563eb" }),
-                ],
-              }),
-              new Paragraph({
-                children: [new TextRun({ text: resultText, size: 24 })],
-              }),
-            ],
-          }],
-        });
+     if (slug.includes("pdf-to-word")) {
+  const resultText = await extractTextFromPDF(file);
+  const lines = resultText.split('\n');
 
-        finalBlob = await Packer.toBlob(doc);
-        newExt = ".docx";
-      } 
-      
+  const doc = new Document({
+    sections: [{
+      children: lines.map(line => {
+        // Empty lines handle karein
+        if (!line.trim()) return new Paragraph({ children: [] });
+
+        // Check if line starts with tab (Indentation detect karna)
+        const tabCount = (line.match(/\t/g) || []).length;
+
+        return new Paragraph({
+          children: [
+            new TextRun({ 
+              text: line.replace(/\t/g, ""), // Tab remove karke asli text
+              size: 24,
+              font: "Calibri" // Standard font taake layout stable rahe
+            })
+          ],
+          indent: {
+            left: tabCount * 720, // Har tab ko 0.5 inch space dena
+          },
+          spacing: {
+            before: 100, // Question ke beech gap
+          }
+        });
+      })
+    }]
+  });
+
+  finalBlob = await Packer.toBlob(doc);
+  newExt = ".docx";
+}
       /**
        * CASE 2: WORD TO PDF
        * Uses 'mammoth' to extract clean text and 'pdf-lib' to draw a real PDF.
