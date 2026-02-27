@@ -1,5 +1,14 @@
 import Link from "next/link";
-import { FileText, Image as ImageIcon, FileCode } from "lucide-react";
+import { 
+  FileText, 
+  Image as ImageIcon, 
+  FileCode, 
+  Layers, 
+  Scissors, 
+  Lock, 
+  Zap,
+  FileSearch
+} from "lucide-react";
 
 const tools = [
   {
@@ -7,6 +16,7 @@ const tools = [
     desc: "Convert PDF documents to editable Word files instantly.",
     slug: "pdf-to-word",
     icon: <FileText className="text-blue-500" size={32} />,
+    badge: "Popular"
   },
   {
     title: "Image to PDF",
@@ -20,17 +30,42 @@ const tools = [
     slug: "word-to-pdf",
     icon: <FileCode className="text-orange-500" size={32} />,
   },
+  {
+    title: "Merge PDF",
+    desc: "Combine multiple PDF files into one organized document.",
+    slug: "merge-pdf",
+    icon: <Layers className="text-purple-500" size={32} />,
+    badge: "Pro"
+  },
+  {
+    title: "Split PDF",
+    desc: "Extract specific pages or split a PDF into multiple files.",
+    slug: "split-pdf",
+    icon: <Scissors className="text-pink-500" size={32} />,
+  },
+  {
+    title: "PDF to Image",
+    desc: "Convert your PDF pages into high-resolution JPG/PNG.",
+    slug: "pdf-to-image",
+    icon: <FileSearch className="text-cyan-500" size={32} />,
+  },
+  {
+    title: "Unlock PDF",
+    desc: "Remove passwords and restrictions from your PDF files.",
+    slug: "unlock-pdf",
+    icon: <Lock className="text-red-500" size={32} />,
+    badge: "Security"
+  },
 ];
-
 export default function HomePage() {
   return (
-    /* FIXED: bg-background aur text-foreground use kiya taake light mode mein black text ho jaye */
+    /* FIXED: bg-background aur text-foreground use for black text in light mode */
     <main className="min-h-screen bg-background text-foreground py-20 px-6 transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
         
         {/* Hero Section */}
         <div className="text-center mb-16 space-y-4">
-          {/* FIXED: text-foreground use kiya white ki jagah */}
+          {/* FIXED: text-foreground use  */}
           <h1 className="text-4xl md:text-6xl font-black text-foreground tracking-tight">
             Streamline Your Workflow with <span className="text-blue-500">Pro-Grade Tools</span>
           </h1>
@@ -47,10 +82,16 @@ export default function HomePage() {
             <Link 
               key={tool.slug} 
               href={`/tools/${tool.slug}`}
-              /* FIXED: bg-card aur border-border use kiya taake theme switch ho sake */
-              className="group p-8 bg-card border border-border rounded-3xl hover:border-blue-500/50 hover:bg-blue-600/5 transition-all duration-300 shadow-sm"
+             
+              className="group relative p-8 bg-card border border-border rounded-3xl hover:border-blue-500/50 hover:bg-blue-600/5 transition-all duration-300 shadow-sm"
             >
-              {/* FIXED: bg-muted icon container ke liye */}
+              {/* Badge for Pro/Popular items */}
+              {tool.badge && (
+                <span className="absolute top-6 right-8 bg-blue-500/10 text-blue-500 text-[9px] font-black px-2 py-0.5 rounded-full border border-blue-500/20 uppercase tracking-tighter">
+                  {tool.badge}
+                </span>
+              )}
+              {/* FIXED: bg-muted for icon container  */}
               <div className="mb-6 bg-muted w-14 h-14 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
                 {tool.icon}
               </div>

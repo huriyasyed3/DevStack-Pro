@@ -13,11 +13,23 @@ import { ReactNode } from "react";
 interface ToastProviderProps {
   children: ReactNode;
 }
+// ToastProvider.tsx update karein
 export default function ToastProvider({ children }: ToastProviderProps) {
   return (
     <>
-      {/* Semicolon hata diya */}
-      <Toaster position="top-right" richColors closeButton />
+      <Toaster 
+        position="top-right" 
+        richColors 
+        closeButton
+        // containerStyle ko hata kar className ya toastOptions use karein
+        toastOptions={{
+          style: { 
+            zIndex: 99999,
+          },
+          // Agar aapko puri list/container ko move karna hai toh yahan classes den
+          className: "mt-5", 
+        }}
+      />
       {children}
     </>
   );
