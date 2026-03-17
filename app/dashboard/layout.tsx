@@ -1,6 +1,6 @@
 import Sidebar from "@/components/dashboard/Sidebar";
 import Footer from "@/components/footer/page";
-
+import RoleModal from "@/components/dashboard/RoleModal";
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     /* FIXED: bg-[#050a15] hata kar 'bg-background' lagaya.
@@ -23,7 +23,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
              Yahan humne container ko max-width di hai taake screen bohot badi na lage
           */}
           <div className="p-4 md:p-8 lg:p-10 w-full max-w-[1400px] mx-auto min-h-[calc(100vh-80px)]">
-            {children}
+            <div className="relative">
+      <RoleModal />
+           <main>{children}</main>
+            </div>
+
           </div>
           
           {/* Footer inside scroll area */}

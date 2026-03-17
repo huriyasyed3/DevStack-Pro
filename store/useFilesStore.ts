@@ -1,8 +1,9 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-/** * ConvertedFile Interface
- */
+// 1. Role Type define karein (Part 4 requirement ke liye)
+export type UserRole = "FREE" | "PRO" | "ADMIN";
+
 export interface ConvertedFile {
   id: string;
   name: string;
@@ -15,9 +16,11 @@ export interface ConvertedFile {
 interface FilesState {
   files: ConvertedFile[];
   conversions: number;
+  role: UserRole; // 2. Role State add ki
+  setRole: (role: UserRole) => void; // 3. Role update karne ka function
   addFile: (file: ConvertedFile) => void;
-  removeFile: (id: string) => void; // Single file delete karne ke liye
-  clearHistory: () => void;      // Poori history saaf karne ke liye
+  removeFile: (id: string) => void;
+  clearHistory: () => void;
 }
 
 export const useFilesStore = create<FilesState>()(
@@ -25,25 +28,26 @@ export const useFilesStore = create<FilesState>()(
     (set) => ({
       files: [],
       conversions: 0,
+      role: "FREE", // 4. Default role 'FREE' rakha
 
-      // Nayi file add karna (Top par show hogi)
+      // Role change karne ka logic
+      setRole: (newRole: UserRole) => set({ role: newRole }),
+
       addFile: (file: ConvertedFile) =>
         set((state) => ({
           files: [file, ...state.files],
           conversions: state.conversions + 1,
         })),
 
-      // Specific file remove karna
       removeFile: (id: string) =>
         set((state) => ({
           files: state.files.filter((f) => f.id !== id),
         })),
 
-      // Poora data clear karna
       clearHistory: () => set({ files: [] }),
     }),
     {
-      name: "devstack-history-storage", // LocalStorage mein is naam se save hoga
+      name: "devstack-history-storage",
       storage: createJSONStorage(() => localStorage),
     }
   )
